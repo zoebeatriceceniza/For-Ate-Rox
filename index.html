@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Sister, Ate Roxette</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300&family=Pinyon+Script&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-canvas: #f5f3f7;
+            --envelope-violet: #3a225d;
+            --envelope-gold: #e2c293;
+            --text-main: #2b1a4a;
+            --gold-accent: #c9a067;
+            --seal-plum: #51256f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            font-family: 'Cormorant Garamond', serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 40px 20px;
+        }
+
+        /* --- LUXE VIOLET & GOLD ENVELOPE --- */
+        .envelope-wrapper {
+            position: relative;
+            width: 480px;
+            height: 330px;
+            background-color: var(--envelope-violet);
+            border-radius: 4px;
+            box-shadow: 0 30px 60px rgba(43, 26, 74, 0.25);
+            cursor: pointer;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            z-index: 10;
+        }
+
+        .envelope-wrapper:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 70px rgba(43, 26, 74, 0.35);
+        }
+
+        /* Envelope Flaps */
+        .envelope-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; width: 0; height: 0;
+            border-style: solid;
+            border-width: 0 0 330px 480px;
+            border-color: transparent transparent #2d184a transparent;
+            z-index: 3;
+        }
+
+        .envelope-left-flap {
+            position: absolute;
+            top: 0; left: 0; width: 0; height: 0;
+            border-style: solid;
+            border-width: 330px 0 0 240px;
+            border-color: transparent transparent transparent #422869;
+            z-index: 3;
+        }
+
+        .envelope-right-flap {
+            position: absolute;
+            top: 0; right: 0; width: 0; height: 0;
+            border-style: solid;
+            border-width: 0 0 330px 240px;
+            border-color: transparent transparent #422869 transparent;
+            z-index: 3;
+        }
+
+        .envelope-top {
+            position: absolute;
+            top: 0; left: 0; width: 0; height: 0;
+            border-style: solid;
+            border-width: 175px 240px 0 240px;
+            border-color: #4f317d transparent transparent transparent;
+            transform-origin: top;
+            transition: transform 0.6s ease;
+            z-index: 4;
+        }
+
+        .envelope-text {
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+            color: #f6f5fa;
+            text-align: center;
+            width: 90%;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .envelope-text span {
+            display: block;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 200;
+            font-size: 0.7rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-top: 12px;
+            color: var(--envelope-gold);
+        }
+
+        .wax-seal {
+            position: absolute;
+            top: 145px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 55px;
+            height: 55px;
+            background: radial-gradient(circle at 35% 35%, #763b9b, var(--seal-plum));
+            border-radius: 50%;
+            z-index: 6;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3), inset -1px -1px 3px rgba(0,0,0,0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        /* --- THE TRUE WATERCOLOR VIOLET STATIONERY CARD --- */
+        .letter-container {
+            max-width: 760px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 40px 90px rgba(43, 26, 74, 0.12);
+            padding: 90px 70px;
+            position: relative;
+            display: none;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Vibrant Violet Botanical Watercolor Edge Framework */
+        .watercolor-frame {
+            position: absolute;
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .wc-top-left {
+            top: 0; left: 0; width: 420px; height: 420px;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'><radialGradient id='violetBleed' cx='0%' cy='0%' r='85%'><stop offset='0%' stop-color='%2351256f' stop-opacity='0.45'/><stop offset='35%' stop-color='%237b2cbf' stop-opacity='0.28'/><stop offset='70%' stop-color='%23e0aaff' stop-opacity='0.12'/><stop offset='100%' stop-color='%23ffffff' stop-opacity='0'/></radialGradient><radialGradient id='goldSpeck' cx='15%' cy='15%' r='25%'><stop offset='0%' stop-color='%23e2c293' stop-opacity='0.65'/><stop offset='100%' stop-color='%23e2c293' stop-opacity='0'/></radialGradient><path d='M0,0 C140,15 200,90 240,170 C160,240 80,190 0,260 Z' fill='url(%23violetBleed)'/><g fill='%236247aa' opacity='0.22'><path d='M10,-10 Q80,45 5,140 C-30,90 -20,30 10,-10 Z'/><path d='M-10,40 Q110,90 40,190 C-10,150 0,100 -10,40 Z'/><path d='M50,-20 Q140,50 180,-10 C130,-40 90,-10 50,-20 Z'/><path d='M120,-10 Q210,80 250,30 C200,0 160,10 120,-10 Z'/></g><g fill='%233a1f5d' opacity='0.28'><path d='M0,70 C30,90 40,120 20,150 C5,130 5,100 0,70 Z'/><path d='M80,0 C110,25 130,55 105,80 C85,60 85,30 80,0 Z'/></g><circle cx='35' cy='140' r='2.5' fill='%23e2c293'/><circle cx='95' cy='85' r='3.5' fill='%23e2c293'/><circle cx='165' cy='45' r='2' fill='%23e2c293'/><circle cx='210' cy='25' r='1.5' fill='%23e2c293'/><path d='M0,0 C100,12 150,65 195,135 Z' fill='url(%23goldSpeck)'/></svg>");
+        }
+
+        .wc-bottom-right {
+            bottom: 0; right: 0; width: 420px; height: 420px;
+            transform: scale(-1);
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'><radialGradient id='violetBleed' cx='0%' cy='0%' r='85%'><stop offset='0%' stop-color='%2351256f' stop-opacity='0.45'/><stop offset='35%' stop-color='%237b2cbf' stop-opacity='0.28'/><stop offset='70%' stop-color='%23e0aaff' stop-opacity='0.12'/><stop offset='100%' stop-color='%23ffffff' stop-opacity='0'/></radialGradient><radialGradient id='goldSpeck' cx='15%' cy='15%' r='25%'><stop offset='0%' stop-color='%23e2c293' stop-opacity='0.65'/><stop offset='100%' stop-color='%23e2c293' stop-opacity='0'/></radialGradient><path d='M0,0 C140,15 200,90 240,170 C160,240 80,190 0,260 Z' fill='url(%23violetBleed)'/><g fill='%236247aa' opacity='0.22'><path d='M10,-10 Q80,45 5,140 C-30,90 -20,30 10,-10 Z'/><path d='M-10,40 Q110,90 40,190 C-10,150 0,100 -10,40 Z'/><path d='M50,-20 Q140,50 180,-10 C130,-40 90,-10 50,-20 Z'/><path d='M120,-10 Q210,80 250,30 C200,0 160,10 120,-10 Z'/></g><g fill='%233a1f5d' opacity='0.28'><path d='M0,70 C30,90 40,120 20,150 C5,130 5,100 0,70 Z'/><path d='M80,0 C110,25 130,55 105,80 C85,60 85,30 80,0 Z'/></g><circle cx='35' cy='140' r='2.5' fill='%23e2c293'/><circle cx='95' cy='85' r='3.5' fill='%23e2c293'/><circle cx='165' cy='45' r='2' fill='%23e2c293'/><circle cx='210' cy='25' r='1.5' fill='%23e2c293'/><path d='M0,0 C100,12 150,65 195,135 Z' fill='url(%23goldSpeck)'/></svg>");
+        }
+
+        /* --- LAYOUT & TYPOGRAPHY --- */
+        .letter-header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .letter-header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: 2.3rem;
+            color: var(--text-main);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+
+        .letter-header .wedding-date {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            font-size: 0.7rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--gold-accent);
+            margin-top: 12px;
+        }
+
+        .letter-body {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            line-height: 1.95;
+            color: var(--text-main);
+            text-align: justify;
+            position: relative;
+            z-index: 3;
+        }
+
+        .letter-body p {
+            margin-bottom: 25px;
+            text-indent: 40px;
+            font-weight: 300;
+        }
+
+        .letter-body p.salutation {
+            text-indent: 0;
+            font-size: 1.4rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-bottom: 30px;
+            color: var(--seal-plum);
+        }
+
+        .letter-body p.closing {
+            text-indent: 0;
+            text-align: right;
+            margin-top: 50px;
+            margin-bottom: 0;
+            font-style: italic;
+        }
+
+        .letter-body p.signature {
+            text-indent: 0;
+            text-align: right;
+            font-family: 'Pinyon Script', cursive;
+            font-size: 3.5rem;
+            color: var(--seal-plum);
+            margin-top: -5px;
+            margin-bottom: 0;
+            padding-right: 20px;
+        }
+
+        /* --- FINE ART MEMORY GALLERY --- */
+        .photo-gallery {
+            margin-top: 80px;
+            border-top: 1px solid rgba(81, 37, 111, 0.1);
+            padding-top: 50px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .gallery-title {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--text-main);
+            margin-bottom: 45px;
+            font-weight: 400;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 35px;
+        }
+
+        .polaroid-frame {
+            background: #ffffff;
+            padding: 12px 12px 22px 12px;
+            box-shadow: 0 10px 35px rgba(43, 26, 74, 0.06);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .polaroid-frame:nth-child(1) { transform: rotate(-1.2deg); }
+        .polaroid-frame:nth-child(2) { transform: rotate(1deg); }
+        .polaroid-frame:nth-child(3) { transform: rotate(-0.8deg); }
+        .polaroid-frame:nth-child(4) { transform: rotate(1.4deg); }
+
+        .polaroid-frame:hover {
+            transform: scale(1.04) rotate(0deg) !important;
+            z-index: 5;
+            box-shadow: 0 20px 45px rgba(43, 26, 74, 0.15);
+        }
+
+        .polaroid-frame img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .polaroid-frame .caption {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            color: var(--seal-plum);
+            margin-top: 15px;
+        }
+
+        /* --- INTERACTIVE STATE TRANSITIONS --- */
+        .envelope-wrapper.open .envelope-top {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+        
+        .envelope-wrapper.fade-away {
+            opacity: 0;
+            transform: scale(0.92) translateY(-15px);
+            pointer-events: none;
+        }
+
+        /* --- RESPONSIVE OPTIMIZATIONS --- */
+        @media (max-width: 650px) {
+            .envelope-wrapper { width: 340px; height: 240px; }
+            .envelope-wrapper::before { border-width: 0 0 240px 340px; }
+            .envelope-left-flap { border-width: 240px 0 0 170px; }
+            .envelope-right-flap { border-width: 0 0 240px 170px; }
+            .envelope-top { border-width: 125px 170px 0 170px; }
+            .wax-seal { top: 100px; width: 45px; height: 45px; font-size: 0.95rem; }
+            .envelope-text { font-size: 1.5rem; }
+            
+            .letter-container { padding: 50px 25px; }
+            .wc-top-left, .wc-bottom-right { width: 200px; height: 200px; }
+            .letter-header h1 { font-size: 1.8rem; }
+            .letter-body { font-size: 1.15rem; }
+            .letter-body p { text-indent: 25px; }
+            .photo-grid { grid-template-columns: 1fr; gap: 30px; }
+            .polaroid-frame img { height: 280px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="envelope-wrapper" id="weddingEnvelope" onclick="unveilLetter()">
+        <div class="envelope-top"></div>
+        <div class="envelope-left-flap"></div>
+        <div class="envelope-right-flap"></div>
+        <div class="wax-seal">R&J</div>
+        <div class="envelope-text">
+            Dear Ate Roxette
+            <span>Open Letter</span>
+        </div>
+    </div>
+
+    <div class="letter-container" id="weddingLetter">
+        <div class="watercolor-frame wc-top-left"></div>
+        <div class="watercolor-frame wc-bottom-right"></div>
+
+        <div class="letter-header">
+            <h1>Best Wishes</h1>
+            <div class="wedding-date">A Lifetime of Love & Happiness</div>
+        </div>
+
+        <div class="letter-body">
+            <p class="salutation">Dear Ate Roxette,</p>
+            
+            <p>I am so incredibly happy that you’re finally getting married! Grabe, ate, ang bilis ng panahon. Parang kailan lang natin pinag-uusapan ang plans, preparations, at invitations, tapos bukas na pala ang pinaka-special na araw para sa inyo ni Kuya Maya. At the same time, nalulungkot din ako na hindi ako makakaattend ng wedding mo, especially because you are one of the most important people in my life. I would have loved to witness this beautiful milestone in person and celebrate it with you.</p>
+            
+            <p>I just want to express how much you mean to me, Ate. You have always been more than just a cousin, you became my sister. You witnessed me grow up through different stages of my life, and I was also blessed to witness your journey into the amazing woman you are today. Through the years, you became one of my greatest inspirations not only in life but also in the career path that I dream of pursuing. Even as I write this letter, I still can’t believe that you’re getting married already.</p>
+            
+            <p>Thank you for all the memories, guidance, and kindness you have shared with me. Thank you for being someone I could always look up to and admire. I am proud of everything you have achieved and even happier knowing that you have found a partner who will walk beside you through this new chapter of your life.</p>
+            
+            <p>As you and Kuya Maya begin this journey together, I pray that your marriage will always be filled with love, understanding, patience, laughter, and unwavering support for one another. May your home be blessed with peace and happiness, and may God continue to guide, protect, and strengthen your relationship through every season of life.</p>
+            
+            <p>Congratulations, Ate Roxette and Kuya Maya. I may not be there physically on your special day, but please know that I will be celebrating with you in spirit and praying for your happiness always.</p>
+            
+            <p>I love you, Ate Rox. Congratulations once again, and best wishes for a beautiful and blessed married life ahead.</p>
+            
+            <p class="closing">With love,</p>
+            <p class="signature">Zoe</p>
+        </div>
+        <div class="photo-gallery">
+            <div class="gallery-title">Treasured Memories</div>
+            <div class="photo-grid">
+                    
+                <div class="polaroid-frame">
+                    <img src="705126903_2248394572637187_4099326756601775858_n.jpg">
+                    <div class="caption">Beautiful Milestones</div>
+                </div>
+
+                <div class="polaroid-frame">
+                    <img src="703879420_3518721011627614_5904819737482530941_n.jpg">
+                    <div class="caption">Joy & Laughter</div>
+                </div>
+
+                <div class="polaroid-frame">
+                    <img src="702863501_1916741615664486_6075932212391925320_n.jpg">
+                    <div class="caption">Always Beside You</div>
+                </div>
+
+                <div class="polaroid-frame">
+                    <img src="702092803_1299522591719048_2984372237033105612_n.jpg">
+                    <div class="caption">Celebrating Love</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function unveilLetter() {
+            const envelope = document.getElementById('weddingEnvelope');
+            const letter = document.getElementById('weddingLetter');
+
+            envelope.classList.add('open');
+
+            setTimeout(() => {
+                envelope.classList.add('fade-away');
+                
+                setTimeout(() => {
+                    envelope.style.display = 'none';
+                    letter.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        letter.style.opacity = '1';
+                        letter.style.transform = 'translateY(0)';
+                    }, 50);
+                }, 400);
+            }, 700);
+        }
+    </script>
+</body>
+</html>
